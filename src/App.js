@@ -42,17 +42,17 @@ const App = () => {
   //prima 2 argumenta, drugi nije obavezan -> detaljnije: https://www.w3schools.com/react/react_useeffect.asp
   useEffect(()=>{
     const savedNotes = JSON.parse(localStorage.getItem('notes-app-data'));
-
     if(savedNotes){
       setNotes(savedNotes);
     }
 
   }, []);//izvodi se samo na prvi render
-  
+
   useEffect(()=>{
     localStorage.setItem('notes-app-data',JSON.stringify(notes));
   }, [notes]);//izvodi se kad se notes promine
   //local storage: web storage, omogucava trajno spremanje key-value podataka, imitira bazu podataka, ali brise se kad se izbrise cache i lokalna je pa nemogu pristupit drugi korisnici aplikacije pa nemoze zaminit bazu
+  //za ocistit local storage: inspect -> application -> local storage -> local host -> clear
 
   const changeDarkMode = (newDarkMode) => {
     if(newDarkMode === true){
@@ -94,15 +94,38 @@ const App = () => {
     setNotes(newNotes);
   }
 
+  const updateNote = (id, text) => {
+    const date = new Date();//daje trenutni datum
+      const updatedNote = {
+        id: id,
+        text: text,
+        date: date.toLocaleDateString()
+      }
+
+    const updatedNotes = notes.map((note) => {
+        if(note.id === id) {
+          return updatedNote
+        }
+        else{
+          return note
+        }
+      
+      })
+    setNotes(updatedNotes);
+
+    //console.log({newNotes});
+  }
+
   return(
     <div className="container">
       <Header currentDarkMode={darkMode} handleDarkMode={changeDarkMode}/>
       <Search handleSearchNote={setSearchText}/>
       <NotesList 
         //notes={notes} 
-        notes={notes.filter((note) => note.text.toLowerCase().includes(searchText))}//kako bi prikaziva samo one Note, u NotesList koje sadrze ono sta je pretrazivano; Na ovaj nacin ne minjam originalni notes array nego ga samo filtriram pri ispisu
+        notes={notes.filter((note) => note.text.toLowerCase().trim().includes(searchText.toLowerCase()))}//kako bi prikaziva samo one Note, u NotesList koje sadrze ono sta je pretrazivano; Na ovaj nacin ne minjam originalni notes array nego ga samo filtriram pri ispisu
         handleAddNote={addNote} 
         handleDeleteNote={deleteNote}
+        handleUpdateNote={updateNote}
       />
     </div>
   )
@@ -111,3 +134,4 @@ const App = () => {
 export default App;
 
 //cili mozak funckija je u App.js pa te funkcije saljem priko komponenti u te fileove pa se one tamo koriste
+//ove funkcije su u App.js ako rade promjene na notes, a ako rade samo na toj komponenti onda su unutar komponente

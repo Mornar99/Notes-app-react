@@ -29,7 +29,7 @@ const AddNote = ({handleAddNote}) => {
 
     return(
         <div className="note new">
-            <textarea rows = '9' cols = '10' placeholder = 'Type to add note...' onChange={handleChange} value={noteText}></textarea>
+            <textarea className="add-new-text" rows = '9' cols = '10' placeholder = 'Type to add note...' onChange={handleChange} value={noteText}></textarea>
 
             <div className="note-footer">
                 <small>{characterLimit - noteText.length} Remaining</small>
@@ -41,5 +41,6 @@ const AddNote = ({handleAddNote}) => {
 }
 //textarea se koristi obicno kad korisnik unosi svoj komentar, velicina odredena brojem redaka i stupaca
 //textarea kad se promini (onChange) aktivira se dana funkcija pa sve sta je uneseno ide na useState
+//u textarea noteText mora ic u value !!!
 
 export default AddNote;
